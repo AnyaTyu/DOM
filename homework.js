@@ -12,7 +12,6 @@ function _onMouseClick(e) {
 	}
 	openPopupFromLink(e.target);
 }
-
 /**
  * Получает данные из ссылки
  * на основе этих данных создаёт попап (через createPopup) и добавляет его в DOM
@@ -20,33 +19,34 @@ function _onMouseClick(e) {
  */
 function openPopupFromLink(link) {
 	var _url = link.getAttribute('href');
-	var message = link.getAttribute('data-message');
+	var message = link.dataset.message;
 	message = message.replace("\'%s\'",_url);
-	var title = link.getAttribute('data-title');
-	var myPopUp = createPopup(title,message,_url);
-	document.body.appendChild(myPopUp);
+	var title = link.dataset.title;
+//Проверяем наличие элемента в DOMe
+	if (!document.getElementById('popUp')) {
+		myPopUp = createPopup(title,message);
+		document.body.appendChild(myPopUp);
+	}
+	else{
+		document.getElementById('popUp').outerHTML = "<div id = \"popUp\" style = \" display: \'block\';\" ><div id=\"tt\"><p>\""+title+"\"</p><p>\""+message+"\"</p><form><input type = \"button\" value = \"Да\" id = \"yes\"/><input type = \"button\" value = \"Нет\" id = \"no\"/></form></div></div>";
+	}
+	//Теперь они не глобальные =))
+	document.getElementById('yes').onclick = function(){
+		window.location = _url;
+	}
+	document.getElementById('no').onclick = function(){
+	document.getElementById('popUp').style.display = 'none';
+	}
 }
-
 /**
  * Создаёт DOM-узел с сообщением
  * @param {String} title Заголовок сообщение
  * @param {String} message Текст сообщения сообщение
- * @param {Function} onOk Обработчик клика по кнопке 'Да'
  * @returns {HTMLElement}
  */
-function createPopup(title, message, _url) {
+function createPopup(title, message){
 	var myPopUp = document.createElement('div');
 	myPopUp.id = "popUp";
-	myPopUp.innerHTML = "<div id=\"tt\"><p>\""+title+"\"</p><p>\""+message+"\"</p><form><input type = \"button\" value = \"Да\" id = \"yes\" onclick = \"go('"+_url+"');\"/><input type = \"button\" value = \"Нет\" id = \"no\" onclick=\"del()\"/></form></div>"
-	//document.body.appendChild(myPopUp);
+	myPopUp.innerHTML = "<div id=\"tt\"><p>\""+title+"\"</p><p>\""+message+"\"</p><form><input type = \"button\" value = \"Да\" id = \"yes\"/><input type = \"button\" value = \"Нет\" id = \"no\"/></form></div>"
 	return myPopUp;
-}
-
-function go(_url){
-	window.location = _url;
-}
-
-function del(){
-	 var del = document.getElementById('popUp')
-	 document.body.removeChild(del);
 }
