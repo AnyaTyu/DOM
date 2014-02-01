@@ -3,9 +3,8 @@
  * @param {Event} e событие клика
  * @private
  */
-document.body.onclick = function(e){
-	if (e.target.className === "popup-link") _onMouseClick(e);
-}
+document.body.addEventListener('click', _onMouseClick);
+
 function _onMouseClick(e) {
 	if (e.preventDefault) {
 		e.preventDefault();
@@ -23,19 +22,21 @@ function openPopupFromLink(link) {
 	message = message.replace("\'%s\'",_url);
 	var title = link.dataset.title;
 //Проверяем наличие элемента в DOMe
-	if (!document.getElementById('popUp')) {
+	if (!document.getElementsByClassName('popUp')[0]) {
 		myPopUp = createPopup(title,message);
 		document.body.appendChild(myPopUp);
 	}
 	else{
-		document.getElementById('popUp').outerHTML = "<div id = \"popUp\" style = \" display: \'block\';\" ><div id=\"tt\"><p>\""+title+"\"</p><p>\""+message+"\"</p><form><input type = \"button\" value = \"Да\" id = \"yes\"/><input type = \"button\" value = \"Нет\" id = \"no\"/></form></div></div>";
+		document.getElementsByClassName('popUp')[0].outerHTML = "<div class = \"popUp\" style = \" display: \'block\';\" ><div class=\"tt\"><p>\""+title+"\"</p><p>\""+message+"\"</p><form><input type = \"button\" value = \"Да\" class = \"yes\"/><input type = \"button\" value = \"Нет\" class = \"no\"/></form></div></div>";
 	}
-	//Теперь они не глобальные =))
-	document.getElementById('yes').onclick = function(){
+	document.getElementsByClassName('yes')[0].addEventListener('click', onOk);
+	document.getElementsByClassName('no')[0].addEventListener('click', del);
+
+	function onOk(){
 		window.location = _url;
 	}
-	document.getElementById('no').onclick = function(){
-	document.getElementById('popUp').style.display = 'none';
+	function del(){
+	document.getElementsByClassName('popUp')[0].style.display = 'none';
 	}
 }
 /**
@@ -46,7 +47,7 @@ function openPopupFromLink(link) {
  */
 function createPopup(title, message){
 	var myPopUp = document.createElement('div');
-	myPopUp.id = "popUp";
-	myPopUp.innerHTML = "<div id=\"tt\"><p>\""+title+"\"</p><p>\""+message+"\"</p><form><input type = \"button\" value = \"Да\" id = \"yes\"/><input type = \"button\" value = \"Нет\" id = \"no\"/></form></div>"
+	myPopUp.className = "popUp";
+	myPopUp.innerHTML = "<div class =\"tt\"><p>\""+title+"\"</p><p>\""+message+"\"</p><form><input type = \"button\" value = \"Да\" class = \"yes\"/><input type = \"button\" value = \"Нет\" class = \"no\"/></form></div>"
 	return myPopUp;
 }
