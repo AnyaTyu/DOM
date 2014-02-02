@@ -27,8 +27,11 @@ function openPopupFromLink(link) {
 		document.body.appendChild(myPopUp);
 	}
 	else{
-		document.getElementsByClassName('popUp')[0].outerHTML = "<div class = \"popUp\" style = \" display: \'block\';\" ><div class=\"tt\"><p>\""+title+"\"</p><p>\""+message+"\"</p><form><input type = \"button\" value = \"Да\" class = \"yes\"/><input type = \"button\" value = \"Нет\" class = \"no\"/></form></div></div>";
+		document.getElementsByClassName('title')[0].innerHTML = title;
+      	document.getElementsByClassName('message')[0].innerHTML = message;
+      	document.getElementsByClassName('popUp')[0].style.display = 'block';
 	}
+	
 	document.getElementsByClassName('yes')[0].addEventListener('click', onOk);
 	document.getElementsByClassName('no')[0].addEventListener('click', del);
 
@@ -48,6 +51,6 @@ function openPopupFromLink(link) {
 function createPopup(title, message){
 	var myPopUp = document.createElement('div');
 	myPopUp.className = "popUp";
-	myPopUp.innerHTML = "<div class =\"tt\"><p>\""+title+"\"</p><p>\""+message+"\"</p><form><input type = \"button\" value = \"Да\" class = \"yes\"/><input type = \"button\" value = \"Нет\" class = \"no\"/></form></div>"
+	myPopUp.innerHTML = "<div class =\"tt\"><p class=\"title\">\""+title+"\"</p><p class=\"message\">\""+message+"\"</p><form><input type = \"button\" value = \"Да\" class = \"yes\"/><input type = \"button\" value = \"Нет\" class = \"no\"/></form></div>"
 	return myPopUp;
 }
