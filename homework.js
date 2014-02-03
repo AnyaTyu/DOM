@@ -18,28 +18,23 @@ function _onMouseClick(e) {
  */
 function openPopupFromLink(link) {
 	var _url = link.getAttribute('href');
-	var message = link.dataset.message;
-	message = message.replace("\'%s\'",_url);
+	var message = link.dataset.message.replace("\'%s\'",_url);
 	var title = link.dataset.title;
 //Проверяем наличие элемента в DOMe
 	if (!document.getElementsByClassName('popUp')[0]) {
-		myPopUp = createPopup(title,message);
-		document.body.appendChild(myPopUp);
+		myPopUp = createPopup(title,
+		message,
+		onOk = function(){
+			window.location = _url;
+		} );
+		document.body.appendChild(myPopUp[0]);
+		document.getElementsByName('but')[0].appendChild(myPopUp[1]);
+		document.getElementsByName('but')[0].appendChild(myPopUp[2]);
 	}
 	else{
 		document.getElementsByClassName('title')[0].innerHTML = title;
       	document.getElementsByClassName('message')[0].innerHTML = message;
       	document.getElementsByClassName('popUp')[0].style.display = 'block';
-	}
-	
-	document.getElementsByClassName('yes')[0].addEventListener('click', onOk);
-	document.getElementsByClassName('no')[0].addEventListener('click', del);
-
-	function onOk(){
-		window.location = _url;
-	}
-	function del(){
-	document.getElementsByClassName('popUp')[0].style.display = 'none';
 	}
 }
 /**
@@ -48,9 +43,24 @@ function openPopupFromLink(link) {
  * @param {String} message Текст сообщения сообщение
  * @returns {HTMLElement}
  */
-function createPopup(title, message){
+function createPopup(title, message, onOk){
 	var myPopUp = document.createElement('div');
 	myPopUp.className = "popUp";
-	myPopUp.innerHTML = "<div class =\"tt\"><p class=\"title\">\""+title+"\"</p><p class=\"message\">\""+message+"\"</p><form><input type = \"button\" value = \"Да\" class = \"yes\"/><input type = \"button\" value = \"Нет\" class = \"no\"/></form></div>"
-	return myPopUp;
+	myPopUp.innerHTML = "<div class =\"tt\"><p class=\"title\">\""+title+"\"</p><p class=\"message\">\""+message+"\"</p><form name = \"but\"></form></div>"
+	
+	var buttonYes = document.createElement('input');
+	buttonYes.setAttribute('type','button');
+	buttonYes.setAttribute('value','Да');
+	buttonYes.addEventListener('click', onOk);
+	
+	var buttonNo = document.createElement('input');
+	buttonNo.setAttribute('type','button');
+	buttonNo.setAttribute('value','Нет');
+	buttonNo.addEventListener('click', del);
+
+	return [myPopUp, buttonYes, buttonNo];
+}
+
+function del(){
+	document.getElementsByClassName('popUp')[0].style.display = 'none';
 }
