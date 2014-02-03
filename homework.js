@@ -1,10 +1,9 @@
+document.body.addEventListener('click', _onMouseClick);
 /**
  * Обработчик клика по ссылке с классом 'popup-link'
  * @param {Event} e событие клика
  * @private
  */
-document.body.addEventListener('click', _onMouseClick);
-
 function _onMouseClick(e) {
 	if (e.preventDefault) {
 		e.preventDefault();
