@@ -1,13 +1,16 @@
-document.body.addEventListener('click', _onMouseClick);
 /**
  * Обработчик клика по ссылке с классом 'popup-link'
  * @param {Event} e событие клика
  * @private
  */
+document.body.addEventListener('click', _onMouseClick);
+
 function _onMouseClick(e) {
-	if (e.preventDefault) {
-		e.preventDefault();
-	}
+	if (e.target.classList.contains('popup-link')) {
+		 if (e.preventDefault){
+		 	e.preventDefault(); 
+		 }
+	};
 	openPopupFromLink(e.target);
 }
 /**
@@ -23,12 +26,9 @@ function openPopupFromLink(link) {
 	if (!document.getElementsByClassName('popUp')[0]) {
 		myPopUp = createPopup(title,
 		message,
-		onOk = function(){
+		function(){
 			window.location = _url;
 		} );
-		document.body.appendChild(myPopUp[0]);
-		document.getElementsByName('but')[0].appendChild(myPopUp[1]);
-		document.getElementsByName('but')[0].appendChild(myPopUp[2]);
 	}
 	else{
 		document.getElementsByClassName('title')[0].innerHTML = title;
@@ -40,24 +40,28 @@ function openPopupFromLink(link) {
  * Создаёт DOM-узел с сообщением
  * @param {String} title Заголовок сообщение
  * @param {String} message Текст сообщения сообщение
+ * @param {Function} onOk Обработчик клика по кнопке 'Да'
  * @returns {HTMLElement}
  */
 function createPopup(title, message, onOk){
 	var myPopUp = document.createElement('div');
 	myPopUp.className = "popUp";
 	myPopUp.innerHTML = "<div class =\"tt\"><p class=\"title\">\""+title+"\"</p><p class=\"message\">\""+message+"\"</p><form name = \"but\"></form></div>"
-	
+	document.body.appendChild(myPopUp);
+
 	var buttonYes = document.createElement('input');
 	buttonYes.setAttribute('type','button');
 	buttonYes.setAttribute('value','Да');
 	buttonYes.addEventListener('click', onOk);
-	
+	document.getElementsByName('but')[0].appendChild(buttonYes);	
+
 	var buttonNo = document.createElement('input');
 	buttonNo.setAttribute('type','button');
 	buttonNo.setAttribute('value','Нет');
 	buttonNo.addEventListener('click', del);
-
-	return [myPopUp, buttonYes, buttonNo];
+	document.getElementsByName('but')[0].appendChild(buttonNo);
+	
+	return myPopUp;
 }
 
 function del(){
