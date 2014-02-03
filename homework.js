@@ -1,14 +1,13 @@
-document.body.addEventListener('click', _onMouseClick);
 /**
  * Обработчик клика по ссылке с классом 'popup-link'
  * @param {Event} e событие клика
  * @private
  */
+document.body.addEventListener('click', _onMouseClick);
+
 function _onMouseClick(e) {
-	if (e.target.classList.contains('popup-link')) {
-		 if (e.preventDefault){
+	if (e.target.classList.contains('popup-link') && e.preventDefault) {
 		 	e.preventDefault(); 
-		 }
 	};
 	openPopupFromLink(e.target);
 }
@@ -21,19 +20,11 @@ function openPopupFromLink(link) {
 	var _url = link.getAttribute('href');
 	var message = link.dataset.message.replace("\'%s\'",_url);
 	var title = link.dataset.title;
-//Проверяем наличие элемента в DOMe
-	if (!document.getElementsByClassName('popUp')[0]) {
-		myPopUp = createPopup(title,
+	createPopup(title,
 		message,
 		function(){
 			window.location = _url;
 		} );
-	}
-	else{
-		document.getElementsByClassName('title')[0].innerHTML = title;
-      	document.getElementsByClassName('message')[0].innerHTML = message;
-      	document.getElementsByClassName('popUp')[0].style.display = 'block';
-	}
 }
 /**
  * Создаёт DOM-узел с сообщением
@@ -43,26 +34,34 @@ function openPopupFromLink(link) {
  * @returns {HTMLElement}
  */
 function createPopup(title, message, onOk){
-	var myPopUp = document.createElement('div');
-	myPopUp.className = "popUp";
-	myPopUp.innerHTML = "<div class =\"tt\"><p class=\"title\">\""+title+"\"</p><p class=\"message\">\""+message+"\"</p><form name = \"but\"></form></div>"
-	document.body.appendChild(myPopUp);
+ 	var myPopUp =  document.getElementsByClassName('popUp')[0];
+	if (!myPopUp) {
+		var myPopUp = document.createElement('div');
+		myPopUp.className = "popUp";
+		myPopUp.innerHTML = "<div class =\"tt\"><p class=\"title\">\""+title+"\"</p><p class=\"message\">\""+message+"\"</p><form name = \"but\"></form></div>"
+		document.body.appendChild(myPopUp);
 
-	var buttonYes = document.createElement('input');
-	buttonYes.setAttribute('type','button');
-	buttonYes.setAttribute('value','Да');
-	buttonYes.addEventListener('click', onOk);
-	document.getElementsByName('but')[0].appendChild(buttonYes);	
+		var buttonYes = document.createElement('input');
+		buttonYes.setAttribute('type','button');
+		buttonYes.setAttribute('value','Да');
+		buttonYes.addEventListener('click', onOk);
+		document.getElementsByName('but')[0].appendChild(buttonYes);	
 
-	var buttonNo = document.createElement('input');
-	buttonNo.setAttribute('type','button');
-	buttonNo.setAttribute('value','Нет');
-	buttonNo.addEventListener('click', del);
-	document.getElementsByName('but')[0].appendChild(buttonNo);
+		var buttonNo = document.createElement('input');
+		buttonNo.setAttribute('type','button');
+		buttonNo.setAttribute('value','Нет');
+		buttonNo.addEventListener('click', del);
+		document.getElementsByName('but')[0].appendChild(buttonNo);
+	}
+	else{
+		myPopUp.getElementsByClassName('title')[0].innerHTML = title;
+		myPopUp.getElementsByClassName('message')[0].innerHTML = message;
+		myPopUp.style.display = "block";
+	}
+
+	function del(){
+	document.getElementsByClassName('popUp')[0].style.display = 'none';
+	}
 	
 	return myPopUp;
-}
-
-function del(){
-	document.getElementsByClassName('popUp')[0].style.display = 'none';
 }
