@@ -1,10 +1,9 @@
+document.body.addEventListener('click', _onMouseClick);
 /**
  * Обработчик клика по ссылке с классом 'popup-link'
  * @param {Event} e событие клика
  * @private
  */
-document.body.addEventListener('click', _onMouseClick);
-
 function _onMouseClick(e) {
 	if (e.target.classList.contains('popup-link') && e.preventDefault) {
 		 	e.preventDefault(); 
@@ -34,9 +33,9 @@ function openPopupFromLink(link) {
  * @returns {HTMLElement}
  */
 function createPopup(title, message, onOk){
- 	var myPopUp =  document.getElementsByClassName('popUp')[0];
+	var myPopUp =  document.getElementsByClassName('popUp')[0];
 	if (!myPopUp) {
-		var myPopUp = document.createElement('div');
+		myPopUp = document.createElement('div');
 		myPopUp.className = "popUp";
 		myPopUp.innerHTML = "<div class =\"tt\"><p class=\"title\">\""+title+"\"</p><p class=\"message\">\""+message+"\"</p><form name = \"but\"></form></div>"
 		document.body.appendChild(myPopUp);
@@ -45,13 +44,13 @@ function createPopup(title, message, onOk){
 		buttonYes.setAttribute('type','button');
 		buttonYes.setAttribute('value','Да');
 		buttonYes.addEventListener('click', onOk);
-		document.getElementsByName('but')[0].appendChild(buttonYes);	
+		myPopUp.childNodes[0].childNodes[2].appendChild(buttonYes);	
 
 		var buttonNo = document.createElement('input');
 		buttonNo.setAttribute('type','button');
 		buttonNo.setAttribute('value','Нет');
 		buttonNo.addEventListener('click', del);
-		document.getElementsByName('but')[0].appendChild(buttonNo);
+		myPopUp.childNodes[0].childNodes[2].appendChild(buttonNo);
 	}
 	else{
 		myPopUp.getElementsByClassName('title')[0].innerHTML = title;
